@@ -12,3 +12,6 @@ class WeatherDTO:
 
     def to_json(self):
         return asdict(self)
+    
+    def __str__(self):
+        return json.dumps(self.to_json(), indent=4)
