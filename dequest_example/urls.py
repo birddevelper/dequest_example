@@ -23,4 +23,5 @@ urlpatterns = [
     path("weather/", include("weather.urls")),
     path("products/", include("products.urls")),
     path("user/", include("users.urls")),
+    path("blog/", include("blog.urls")),
 ]

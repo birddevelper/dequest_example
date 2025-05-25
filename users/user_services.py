@@ -5,7 +5,10 @@ The access token is used to authenticate the user for subsequent API requests.
 The get_current_user() method retrieves the current user's information using the access token.
 """
 
-from dequest import sync_client, JsonBody, HttpMethod
+import http
+
+from requests import HTTPError
+from dequest import sync_client, async_client, JsonBody, HttpMethod
 
 from users.dtos import AuthResponseDTO, UserDTO
 
@@ -43,11 +46,16 @@ def get_access_token() -> str:
     return user_dto.accessToken
 
 
-@sync_client(
+@async_client(
     dto_class=UserDTO,
     url="https://dummyjson.com/auth/me",
     method=HttpMethod.GET,
     auth_token=get_access_token,
+    retry_on_exceptions=(HTTPError,),
+    retries=3,
+    retry_delay=1,
+    # retry only if the error is server internal error (500)
+    giveup=lambda e: e.response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR,
 )
 def get_current_user() -> UserDTO:
     """

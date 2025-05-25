@@ -11,6 +11,6 @@ def get_current_user(request):
     return JsonResponse(
         {
             "message": "User retrieved successfully",
-            "user": user.to_json(),
+            # "user": user.to_json(),
         }
     )
